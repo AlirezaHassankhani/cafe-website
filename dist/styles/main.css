@@ -11,6 +11,7 @@
     --color-rose-300: hsl(14, 25%, 72%);
     --color-rose-400: hsl(7, 20%, 60%);
     --color-rose-500: hsl(12, 20%, 44%);
+    --color-rose-600: oklch(58.6% 0.253 17.585);
     --color-rose-900: hsl(14, 65%, 9%);
     --color-slate-200: oklch(92.9% 0.013 255.508);
     --color-slate-400: oklch(70.4% 0.04 256.788);
@@ -22,6 +23,8 @@
     --container-md: 28rem;
     --text-sm: 0.875rem;
     --text-sm--line-height: calc(1.25 / 0.875);
+    --text-xl: 1.25rem;
+    --text-xl--line-height: calc(1.75 / 1.25);
     --text-2xl: 1.5rem;
     --text-2xl--line-height: calc(2 / 1.5);
     --text-3xl: 1.875rem;
@@ -364,6 +367,24 @@
   .bg-red {
     background-color: var(--color-red);
   }
+  .bg-red\/9 {
+    background-color: color-mix(in srgb, hsl(14, 86%, 42%) 9%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-red) 9%, transparent);
+    }
+  }
+  .bg-red\/90 {
+    background-color: color-mix(in srgb, hsl(14, 86%, 42%) 90%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-red) 90%, transparent);
+    }
+  }
+  .bg-red\/95 {
+    background-color: color-mix(in srgb, hsl(14, 86%, 42%) 95%, transparent);
+    @supports (color: color-mix(in lab, red, red)) {
+      background-color: color-mix(in oklab, var(--color-red) 95%, transparent);
+    }
+  }
   .bg-rose-50 {
     background-color: var(--color-rose-50);
   }
@@ -413,8 +434,15 @@
     font-size: var(--text-sm);
     line-height: var(--tw-leading, var(--text-sm--line-height));
   }
+  .text-xl {
+    font-size: var(--text-xl);
+    line-height: var(--tw-leading, var(--text-xl--line-height));
+  }
   .text-\[11px\] {
     font-size: 11px;
+  }
+  .text-\[18\] {
+    color: 18;
   }
   .text-black {
     color: var(--color-black);
@@ -439,6 +467,9 @@
   }
   .text-rose-500 {
     color: var(--color-rose-500);
+  }
+  .text-rose-600 {
+    color: var(--color-rose-600);
   }
   .text-rose-900 {
     color: var(--color-rose-900);
@@ -478,6 +509,13 @@
     &:hover {
       @media (hover: hover) {
         border-color: var(--color-black);
+      }
+    }
+  }
+  .hover\:bg-red {
+    &:hover {
+      @media (hover: hover) {
+        background-color: var(--color-red);
       }
     }
   }
