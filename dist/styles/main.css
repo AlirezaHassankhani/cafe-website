@@ -232,18 +232,45 @@
   .table {
     display: table;
   }
-  .aspect-\[3\/2\] {
-    aspect-ratio: 3/2;
+  .size-2 {
+    width: calc(var(--spacing) * 2);
+    height: calc(var(--spacing) * 2);
+  }
+  .size-5 {
+    width: calc(var(--spacing) * 5);
+    height: calc(var(--spacing) * 5);
   }
   .size-6 {
     width: calc(var(--spacing) * 6);
     height: calc(var(--spacing) * 6);
+  }
+  .size-10 {
+    width: calc(var(--spacing) * 10);
+    height: calc(var(--spacing) * 10);
   }
   .h-12 {
     height: calc(var(--spacing) * 12);
   }
   .h-full {
     height: 100%;
+  }
+  .w-3 {
+    width: calc(var(--spacing) * 3);
+  }
+  .w-4 {
+    width: calc(var(--spacing) * 4);
+  }
+  .w-32 {
+    width: calc(var(--spacing) * 32);
+  }
+  .w-36 {
+    width: calc(var(--spacing) * 36);
+  }
+  .w-40 {
+    width: calc(var(--spacing) * 40);
+  }
+  .w-44 {
+    width: calc(var(--spacing) * 44);
   }
   .w-fit {
     width: fit-content;
@@ -274,9 +301,6 @@
   }
   .grid-cols-1 {
     grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
-  .grid-cols-3 {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
   .flex-col {
     flex-direction: column;
@@ -346,6 +370,10 @@
     border-style: var(--tw-border-style);
     border-width: 2px;
   }
+  .border-4 {
+    border-style: var(--tw-border-style);
+    border-width: 4px;
+  }
   .border-b {
     border-bottom-style: var(--tw-border-style);
     border-bottom-width: 1px;
@@ -353,11 +381,17 @@
   .border-\[\#CAAFA7\] {
     border-color: #CAAFA7;
   }
+  .border-red {
+    border-color: var(--color-red);
+  }
+  .border-rose-50 {
+    border-color: var(--color-rose-50);
+  }
   .border-rose-100 {
     border-color: var(--color-rose-100);
   }
-  .border-rose-300 {
-    border-color: var(--color-rose-300);
+  .border-white {
+    border-color: var(--color-white);
   }
   .bg-red {
     background-color: var(--color-red);
@@ -374,8 +408,11 @@
   .object-cover {
     object-fit: cover;
   }
-  .object-fill {
-    object-fit: fill;
+  .p-2 {
+    padding: calc(var(--spacing) * 2);
+  }
+  .p-4 {
+    padding: calc(var(--spacing) * 4);
   }
   .p-6 {
     padding: calc(var(--spacing) * 6);
@@ -415,6 +452,9 @@
   }
   .text-red {
     color: var(--color-red);
+  }
+  .text-rose-50 {
+    color: var(--color-rose-50);
   }
   .text-rose-300 {
     color: var(--color-rose-300);
@@ -462,11 +502,6 @@
       flex-wrap: wrap;
     }
   }
-  .lg\:aspect-square {
-    @media (width >= 64rem) {
-      aspect-ratio: 1 / 1;
-    }
-  }
   .lg\:grid-cols-3 {
     @media (width >= 64rem) {
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -486,10 +521,22 @@
   src: url(../../assets/fonts/static/RedHatText-SemiBold.ttf) format("truetype");
 }
 [data-is-selected="false"] {
+  cursor: pointer;
   align-items: center;
   justify-content: center;
   gap: calc(var(--spacing) * 2);
+  border-style: var(--tw-border-style);
+  border-width: 2px;
+  border-color: var(--color-rose-300);
+  background-color: var(--color-white);
   padding-inline: calc(var(--spacing) * 7);
+}
+[data-is-selected="true"] {
+  align-items: center;
+  justify-content: space-between;
+  gap: calc(var(--spacing) * 2);
+  background-color: var(--color-red);
+  padding: calc(var(--spacing) * 4);
 }
 @property --tw-space-y-reverse {
   syntax: "*";
