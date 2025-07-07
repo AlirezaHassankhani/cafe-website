@@ -1,16 +1,19 @@
-import products from "./products.js";
 import Cart from "./cart.js";
+import Counter from "./counter.js";
+import products from "./products.js";
 const $ = document;
-let cart = new Cart();
 let container = $.getElementById("container");
 let cartCount = $.getElementById("cart-count");
 let cartBox = $.getElementById("cart-box");
-document.addEventListener("DOMContentLoaded", () => {
+let cart = new Cart();
+let counter = new Counter(1);
+document.addEventListener("DOMContentLoaded", function () {
     setCartValue();
 });
 function getDisableBtnTemplate() {
     return `
-                <svg
+                <div class="flex gap-2 w-full h-full items-center px-7" id="disable-btn">
+                  <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="21"
                     height="20"
@@ -33,11 +36,12 @@ function getDisableBtnTemplate() {
                   </svg>
 
                   <p class="font-redhatSemibold">Add to Cart</p>
+                </div>
     `;
 }
 function getEnableBtnTemplate() {
     return `
-                <button class="border-2 border-rose-50 rounded-full size-5 flex justify-center items-center cursor-pointer" id="decrease">
+                <button class="border-2 border-rose-50 rounded-full size-5 flex justify-center items-center cursor-pointer" id="decrease-btn">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="10"
@@ -49,9 +53,9 @@ function getEnableBtnTemplate() {
                     </svg>
                   </button>
 
-                  <p class="text-sm font-redhatSemibold text-rose-50" id="counter">1</p>
+                  <p class="text-sm font-redhatSemibold text-rose-50" id="counter">${counter.getCount()}</p>
 
-                  <button class="border-2 border-rose-50 rounded-full size-5 flex justify-center items-center cursor-pointer" id="increase">
+                  <button class="border-2 border-rose-50 rounded-full size-5 flex justify-center items-center cursor-pointer" id="increase-btn">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="10"
@@ -68,26 +72,27 @@ function getEnableBtnTemplate() {
         `;
 }
 products.forEach((product) => {
+    const { id, name, price, src, title } = product;
     container?.insertAdjacentHTML("beforeend", `
-        <div data-id=${product.id}>
+        <div data-id=${id}>
               <div>
                 <div>
                     <img
-                        src=${product.src.desktop}
-                        alt=${product.name}
+                        src=${src.desktop}
+                        alt=${name}
                         class="rounded-md object-cover w-full h-full border-red"
                     />
                 </div>
 
-                <div class="relative z-10 flex -mt-6 h-12 w-44 mx-auto rounded-4xl cursor-pointer" id="add-btn-wrapper" data-is-selected="false">
+                <div class="relative z-10 flex -mt-6 h-12 w-44 mx-auto rounded-4xl" data-is-selected="false">
                    ${getDisableBtnTemplate()}
                 </div>
               </div>
 
               <div class="my-4 space-y-1">
-                <p class="font-redhat text-rose-300 text-sm">${product.name}</p>
-                <p class="font-redhatSemibold">${product.title}</p>
-                <p class="font-redhatSemibold text-red">$${product.price}</p>
+                <p class="font-redhat text-rose-300 text-sm">${name}</p>
+                <p class="font-redhatSemibold">${title}</p>
+                <p class="font-redhatSemibold text-red">$${price}</p>
               </div>
             </div>
     `);
@@ -96,36 +101,49 @@ function disableAllBtn() {
     const btnWrapper = $.querySelector('[data-is-selected="true"]');
     if (btnWrapper) {
         btnWrapper.dataset.isSelected = "false";
-        btnWrapper.textContent = "";
-        btnWrapper.insertAdjacentHTML("beforeend", getDisableBtnTemplate());
-        const imgWrapper = btnWrapper.previousElementSibling;
-        imgWrapper?.querySelector("img")?.classList.remove("border-2");
+        btnWrapper.innerHTML = getDisableBtnTemplate();
+        btnWrapper.parentElement
+            ?.querySelector("img")
+            ?.classList.remove("border-2");
     }
 }
 container?.addEventListener("click", function (e) {
     const target = e.target;
     if (target instanceof Element) {
-        const btnWrapper = target.closest("#add-btn-wrapper");
+        const btnWrapper = target.closest("[data-is-selected]");
         const product = target.closest("[data-id]");
+        const disableBtn = target.closest("#disable-btn");
+        const increaseBtn = target.closest("#increase-btn");
+        const decreaseBtn = target.closest("#decrease-btn");
         if (btnWrapper) {
-            disableAllBtn();
-            cart.addProductToCart(product.dataset.id || "");
+            if (disableBtn) {
+                disableAllBtn();
+                cart.addProductToCart(product.dataset.id || "");
+                counter.setCount(cart.getProductCount(product.dataset.id || "") || 0);
+                btnWrapper.dataset.isSelected = "true";
+                btnWrapper.parentElement
+                    ?.querySelector("img")
+                    ?.classList.add("border-2");
+            }
+            else if (increaseBtn) {
+                cart.addProductToCart(product.dataset.id || "");
+                counter.increase();
+            }
+            else if (decreaseBtn) {
+                cart.deleteProduct(product.dataset.id || "");
+                counter.decrease();
+            }
             setCartValue();
-            btnWrapper.dataset.isSelected = "true";
-            btnWrapper.textContent = "";
-            btnWrapper.insertAdjacentHTML("beforeend", getEnableBtnTemplate());
-            const imgWrapper = btnWrapper.previousElementSibling;
-            imgWrapper?.querySelector("img")?.classList.add("border-2");
+            btnWrapper.innerHTML = getEnableBtnTemplate();
         }
     }
 });
 function setCartValue() {
-    cartCount.textContent = String(cart.getLength());
+    cartCount.textContent = String(cart.totalProduct());
     if (cartBox) {
-        cartBox.textContent = "";
-        cartBox.append($.createElement("ul"));
+        cartBox.innerHTML = "<ul></ul>";
     }
-    if (cart.getLength()) {
+    if (cart.totalProduct()) {
         cart.getCart().forEach((product) => {
             const { title, price, count } = product;
             cartBox?.querySelector("ul")?.insertAdjacentHTML("beforeend", `
@@ -175,7 +193,7 @@ function setCartValue() {
         <div class="flex justify-between items-center">
                 <p class="text-rose-900 text-sm font-redhat">Order Total</p>
 
-                <p class="text-rose-900 font-redhatBold text-2xl">$46.50</p>
+                <p class="text-rose-900 font-redhatBold text-2xl">$${cart.calcTotalPrice()}</p>
               </div>
 
               <div

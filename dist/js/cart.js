@@ -3,7 +3,6 @@ class Cart {
     cart = [];
     addProductToCart(ID) {
         let hasProduct = this.cart.some((itme) => itme.id === ID);
-        console.log("in");
         if (hasProduct) {
             this.cart = this.cart.map((item) => {
                 if (item.id == ID) {
@@ -11,7 +10,6 @@ class Cart {
                 }
                 return item;
             });
-            console.log("on");
         }
         else {
             let { id, title, price } = products.find((product) => product.id == ID);
@@ -19,7 +17,19 @@ class Cart {
         }
     }
     deleteProduct(ID) {
-        this.cart = this.cart.filter((item) => item.id != ID);
+        this.cart = this.cart.map((items) => {
+            if (items.id == ID) {
+                if (items.count > 1) {
+                    return { ...items, count: items.count - 1 };
+                }
+                else {
+                    return items;
+                }
+            }
+            else {
+                return items;
+            }
+        });
     }
     setCart(cart) {
         this.cart = cart;
@@ -27,8 +37,20 @@ class Cart {
     getCart() {
         return this.cart;
     }
-    getLength() {
-        return this.cart.length;
+    getProductCount(ID) {
+        return this.cart.find((item) => item.id == ID)?.count;
+    }
+    totalProduct() {
+        let totalProduct = 0;
+        this.cart.forEach((item) => (totalProduct += item.count));
+        return totalProduct;
+    }
+    calcTotalPrice() {
+        let totalPrice = 0;
+        this.cart.forEach((item) => {
+            totalPrice += item.price * item.count;
+        });
+        return totalPrice;
     }
 }
 export default Cart;
