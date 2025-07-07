@@ -1,5 +1,6 @@
 let products = [
     {
+        id: crypto.randomUUID(),
         name: "brownie",
         title: "salted caramel brownie",
         src: {
@@ -11,6 +12,7 @@ let products = [
         price: 5.5,
     },
     {
+        id: crypto.randomUUID(),
         name: "baklava",
         title: "pistachio baklava",
         src: {
@@ -22,6 +24,7 @@ let products = [
         price: 4.0,
     },
     {
+        id: crypto.randomUUID(),
         name: "cake",
         title: "red velvet cake",
         src: {
@@ -33,6 +36,7 @@ let products = [
         price: 4.5,
     },
     {
+        id: crypto.randomUUID(),
         name: "creme brulee",
         title: "vanilla bean creme brulee",
         src: {
@@ -44,6 +48,7 @@ let products = [
         price: 7.0,
     },
     {
+        id: crypto.randomUUID(),
         name: "macaron",
         title: "macaron mix of five",
         src: {
@@ -55,6 +60,7 @@ let products = [
         price: 8.0,
     },
     {
+        id: crypto.randomUUID(),
         name: "pie",
         title: "lemon meringue pie",
         src: {
@@ -66,6 +72,7 @@ let products = [
         price: 5.0,
     },
     {
+        id: crypto.randomUUID(),
         name: "panna cotta",
         title: "vanilla panna cotta",
         src: {
@@ -77,6 +84,7 @@ let products = [
         price: 6.5,
     },
     {
+        id: crypto.randomUUID(),
         name: "tiramisu",
         title: "classic tiramisu",
         src: {
@@ -88,6 +96,7 @@ let products = [
         price: 5.5,
     },
     {
+        id: crypto.randomUUID(),
         name: "waffle",
         title: "waffle with berries",
         src: {
