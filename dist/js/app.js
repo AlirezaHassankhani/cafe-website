@@ -136,6 +136,7 @@ document.addEventListener("click", function (e) {
         const disableBtn = target.closest("#disable-btn");
         const increaseBtn = target.closest("#increase-btn");
         const decreaseBtn = target.closest("#decrease-btn");
+        const deleteProductBtn = target.closest("#delete-product");
         if (btnWrapper) {
             if (disableBtn) {
                 disableAllBtn();
@@ -157,6 +158,12 @@ document.addEventListener("click", function (e) {
             setCartValue();
             btnWrapper.innerHTML = getEnableBtnTemplate();
         }
+        else if (deleteProductBtn) {
+            let item = deleteProductBtn.closest("[data-id]");
+            cart.deleteFormCart(item.dataset.id || "");
+            setCartValue();
+            disableAllBtn();
+        }
         else {
             disableAllBtn();
         }
@@ -169,9 +176,9 @@ function setCartValue() {
     }
     if (cart.totalProduct()) {
         cart.getCart().forEach((product) => {
-            const { title, price, count } = product;
+            const { title, price, count, id } = product;
             cartBox?.querySelector("ul")?.insertAdjacentHTML("beforeend", `
-            <li>
+            <li data-id=${id}>
                   <div
                     class="flex justify-between items-center border-b border-rose-100 pb-5"
                   >
@@ -196,6 +203,7 @@ function setCartValue() {
 
                     <div
                       class="rounded-full border-2 border-[#CAAFA7] size-6 flex justify-center items-center cursor-pointer group transition-all hover:border-black"
+                      id="delete-product"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"

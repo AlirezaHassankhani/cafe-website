@@ -31,6 +31,9 @@ class Cart {
             }
         });
     }
+    deleteFormCart(ID) {
+        this.cart = this.cart.filter(item => item.id != ID);
+    }
     setCart(cart) {
         this.cart = cart;
     }
