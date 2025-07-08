@@ -108,14 +108,27 @@ function disableAllBtn() {
             ?.classList.remove("border-2");
     }
 }
-overlay?.addEventListener("click", () => {
-    overlay.classList.add(...["invisible", "opacity-0"]);
-    let opanElement = $.querySelector("[data-open]");
+function overlayClose() {
+    overlay?.classList.add(...["invisible", "opacity-0"]);
+    let opanElement = $.querySelector("[data-open='true']");
     if (opanElement) {
         opanElement.dataset.open = "false";
+        opanElement.classList.add(...["invisible", "opacity-0"]);
     }
-});
-container?.addEventListener("click", function (e) {
+}
+function overlayOpen() {
+    overlay?.classList.remove(...["invisible", "opacity-0"]);
+}
+function confirmeBoxPopup() {
+    overlayOpen();
+    let confirmeBox = $.querySelector("#confirme-box");
+    if (confirmeBox) {
+        confirmeBox.dataset.open = "true";
+        confirmeBox.classList.remove(...["invisible", "opacity-0"]);
+    }
+}
+overlay?.addEventListener("click", overlayClose);
+document.addEventListener("click", function (e) {
     const target = e.target;
     if (target instanceof Element) {
         const btnWrapper = target.closest("[data-is-selected]");
@@ -143,6 +156,9 @@ container?.addEventListener("click", function (e) {
             }
             setCartValue();
             btnWrapper.innerHTML = getEnableBtnTemplate();
+        }
+        else {
+            disableAllBtn();
         }
     }
 });
@@ -237,6 +253,7 @@ function setCartValue() {
 
               <button
                 class="bg-red py-4 text-white font-redhat cursor-pointer rounded-4xl"
+                id="confirme-btn"
               >
                 Confirm Order
               </button>`);
@@ -250,3 +267,12 @@ function setCartValue() {
     `);
     }
 }
+cartBox?.addEventListener("click", function (e) {
+    let target = e.target;
+    if (target instanceof Element) {
+        let confirmeBtn = target.closest("#confirme-btn");
+        if (confirmeBtn) {
+            confirmeBoxPopup();
+        }
+    }
+});
