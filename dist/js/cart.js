@@ -12,8 +12,8 @@ class Cart {
             });
         }
         else {
-            let { id, title, price } = products.find((product) => product.id == ID);
-            this.cart.push({ id, title, price, count: 1 });
+            let { id, title, price, name, src: { thumbnail } } = products.find((product) => product.id == ID);
+            this.cart.push({ id, title, price, name, src: thumbnail, count: 1 });
         }
     }
     deleteProduct(ID) {
