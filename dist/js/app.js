@@ -6,7 +6,9 @@ let container = $.getElementById("container");
 let cartCount = $.getElementById("cart-count");
 let cartBox = $.getElementById("cart-box");
 let overlay = $.querySelector(".overlay");
-let boxConfirme = $.querySelector("#box-confirme");
+let cartConfirmeWrapper = $.querySelector("#cart-confirme-wrapper");
+let cartTotalPrice = $.querySelector("#cart-total-price");
+let cartNewBtn = $.querySelector("#cart-new-btn");
 let cart = new Cart();
 let counter = new Counter(1);
 document.addEventListener("DOMContentLoaded", function () {
@@ -127,7 +129,13 @@ function confirmeBoxPopup() {
         confirmeBox.dataset.open = "true";
         confirmeBox.classList.remove(...["invisible", "opacity-0"]);
     }
-    cart.getCart().forEach((item) => confirmeBox.insertAdjacentHTML("beforeend", `
+    if (cartConfirmeWrapper)
+        cartConfirmeWrapper.textContent = "";
+    if (cartTotalPrice)
+        cartTotalPrice.textContent = "$" + String(cart.calcTotalPrice());
+    cart.getCart().forEach((item) => {
+        const { count, name, price, src, title } = item;
+        cartConfirmeWrapper?.insertAdjacentHTML("beforeend", `
     <li>
               <div
                 class="flex justify-between items-center border-b border-rose-100 pb-5"
@@ -135,22 +143,22 @@ function confirmeBoxPopup() {
                 <div class="flex items-center gap-4">
                   <div>
                     <img
-                      src="./assets//images/image-baklava-thumbnail.jpg"
+                      src=${src}
                       alt=""
                       class="size-12 object-cover rounded-md"
                     />
                   </div>
 
                   <div class="space-y-1.5">
-                    <p class="font-redhatSemibold text-rose-900">${item.name}</p>
+                    <p class="font-redhatSemibold text-rose-900">${name}</p>
 
                     <div class="flex gap-4">
                       <p class="text-red font-redhatSemibold text-sm">
-                        3<span class="text-[11px]">&#10006;</span>
+                        ${count}<span class="text-[11px]">&#10006;</span>
                       </p>
 
                       <p class="text-sm">
-                        <span class="text-rose-400 font-redhat">@ $2.3 </span
+                        <span class="text-rose-400 font-redhat">@ $${price} </span
                         >&nbsp;
                       </p>
                     </div>
@@ -159,12 +167,15 @@ function confirmeBoxPopup() {
 
                 <div>
                   <span class="text-rose-500 font-redhatSemibold text-sm"
-                    >$2.3</span
+                    >$${price * count}</span
                   >
                 </div>
               </div>
             </li>
-    `));
+    `);
+    });
+    cart.setCart([]);
+    setCartValue();
 }
 overlay?.addEventListener("click", overlayClose);
 document.addEventListener("click", function (e) {
@@ -322,4 +333,7 @@ cartBox?.addEventListener("click", function (e) {
             confirmeBoxPopup();
         }
     }
+});
+cartNewBtn?.addEventListener("click", () => {
+    overlayClose();
 });
