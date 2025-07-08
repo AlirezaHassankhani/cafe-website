@@ -5,6 +5,7 @@ const $ = document;
 let container = $.getElementById("container");
 let cartCount = $.getElementById("cart-count");
 let cartBox = $.getElementById("cart-box");
+let overlay = $.querySelector(".overlay");
 let cart = new Cart();
 let counter = new Counter(1);
 document.addEventListener("DOMContentLoaded", function () {
@@ -107,6 +108,13 @@ function disableAllBtn() {
             ?.classList.remove("border-2");
     }
 }
+overlay?.addEventListener("click", () => {
+    overlay.classList.add(...["invisible", "opacity-0"]);
+    let opanElement = $.querySelector("[data-open]");
+    if (opanElement) {
+        opanElement.dataset.open = "false";
+    }
+});
 container?.addEventListener("click", function (e) {
     const target = e.target;
     if (target instanceof Element) {
@@ -141,7 +149,7 @@ container?.addEventListener("click", function (e) {
 function setCartValue() {
     cartCount.textContent = String(cart.totalProduct());
     if (cartBox) {
-        cartBox.innerHTML = "<ul></ul>";
+        cartBox.innerHTML = '<ul class="space-y-4"></ul>';
     }
     if (cart.totalProduct()) {
         cart.getCart().forEach((product) => {
