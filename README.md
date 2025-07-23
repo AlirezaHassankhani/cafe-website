@@ -1,33 +1,38 @@
 # 🛒 Responsive Shopping Cart Website
 
-A simple, responsive shopping cart website built with **HTML**, **TypeScript**, and **Tailwind CSS**.
+A clean and responsive shopping cart website built using **HTML**, **TypeScript**, and **Tailwind CSS**.
 
 ## ✨ Features
 
-- Fully responsive design (mobile, tablet, desktop)
-- Styled with Tailwind CSS
-- TypeScript for structured and maintainable code
-- Add/remove items to the cart
-- Clean and user-friendly interface
+- ✅ Fully responsive design (mobile, tablet, desktop)
+- 🎨 Styled with Tailwind CSS for fast and modern UI
+- 🧠 TypeScript for type-safe and maintainable code
+- ➕ Add/remove items from the cart with ease
+- 🧼 Minimalist and user-friendly interface
 
 ## 📸 Preview
 
 <div align="center">
-  <img src="./assets/desktop-design-empty.jpg" alt="Preview 1" width="300"/>
-  <img src="./assets/mobile-design-order-confirmation.jpg" alt="Preview 2" width="300"/>
+  <img src="./public/desktop-design-empty.jpg" alt="Desktop Preview" width="300"/>
+  <img src="./public/mobile-design-order-confirmation.jpg" alt="Mobile Preview" width="300"/>
 </div>
 
 ## 🚀 Getting Started
 
-To run locally:
+To run the project locally:
 
-```bash
-git clone https://github.com/AlirezaHassankhani/cafe-website
-cd your-project-name
-```
-Install dependencies if needed:
-```bash
-npm install
-npm run dev
-```
-and run it on local host and away we go.
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/AlirezaHassankhani/cafe-website
+   cd cafe-website
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+
+3. **Start the development server:**
+   ```bash
+   npm run dev
+
+💥 And you’re good to go!
+
