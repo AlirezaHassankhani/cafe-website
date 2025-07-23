@@ -1,7 +1,3 @@
-interface ICounter {
-  count: number;
-}
-
 class Counter {
   private count: number = 0;
 

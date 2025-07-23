@@ -5,9 +5,9 @@ import products from "./products.js";
 
 const $ = document;
 
-let container = $.getElementById("container");
-let cartCount = $.getElementById("cart-count")!;
-let cartBox = $.getElementById("cart-box");
+let productsWrapper = $.querySelector(".products-wrapper");
+let cartWrapper = $.querySelector(".cart-wrapper");
+let cartCount = $.getElementById("cart-count");
 let overlay = $.querySelector(".overlay");
 
 let cartConfirmeWrapper = $.querySelector("#cart-confirme-wrapper");
@@ -87,7 +87,7 @@ function getEnableBtnTemplate() {
 products.forEach((product) => {
   const { id, name, price, src, title } = product;
 
-  container?.insertAdjacentHTML(
+  productsWrapper?.insertAdjacentHTML(
     "beforeend",
     `
         <div data-id=${id}>
@@ -253,17 +253,19 @@ document.addEventListener("click", function (e) {
 });
 
 function setCartValue() {
-  cartCount.textContent = String(cart.totalProduct());
+  if(cartCount instanceof HTMLSpanElement) {
+    cartCount.textContent = String(cart.totalProduct());
+  }
 
-  if (cartBox) {
-    cartBox.innerHTML = '<ul class="space-y-4"></ul>';
+  if (cartWrapper) {
+    cartWrapper.innerHTML = '<ul class="space-y-4"></ul>';
   }
 
   if (cart.totalProduct()) {
     cart.getCart().forEach((product) => {
       const { title, price, count, id } = product;
 
-      cartBox?.querySelector("ul")?.insertAdjacentHTML(
+      cartWrapper?.querySelector("ul")?.insertAdjacentHTML(
         "beforeend",
         `
             <li data-id=${id}>
@@ -311,7 +313,7 @@ function setCartValue() {
       );
     });
 
-    cartBox?.insertAdjacentHTML(
+    cartWrapper?.insertAdjacentHTML(
       "beforeend",
       `
         <div class="flex justify-between items-center">
@@ -359,7 +361,7 @@ function setCartValue() {
               </button>`
     );
   } else {
-    cartBox?.insertAdjacentHTML(
+    cartWrapper?.insertAdjacentHTML(
       "beforeend",
       `
         <div class="flex flex-col gap-6 justify-center items-center">
@@ -371,7 +373,7 @@ function setCartValue() {
   }
 }
 
-cartBox?.addEventListener("click", function (e) {
+cartWrapper?.addEventListener("click", function (e) {
   let target = e.target;
 
   if (target instanceof Element) {

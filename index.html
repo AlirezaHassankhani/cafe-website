@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Desserts</title>
+    <title>Cafe</title>
 
     <link
       rel="shortcut icon"
@@ -11,7 +11,8 @@
       type="image/x-icon"
     />
     <link rel="stylesheet" href="./dist/styles/style.css" />
-    <script src="./dist/js/app.js" type="module"></script>
+
+    <script src="./dist/js/app.js" type="module" defer></script>
   </head>
   <body class="bg-rose-50">
     <div class="container">
@@ -20,8 +21,7 @@
           <h1 class="font-redhatBold text-4xl my-8">Desserts</h1>
 
           <div
-            class="grid grid-cols-1 lg:grid-cols-3 gap-5"
-            id="container"
+            class="products-wrapper grid grid-cols-1 lg:grid-cols-3 gap-5"
           ></div>
         </div>
 
@@ -31,12 +31,13 @@
               Your Cart (<span id="cart-count"></span>)
             </h2>
 
-            <div class="flex flex-col gap-6" id="cart-box"></div>
+            <div class="cart-wrapper flex flex-col gap-6"></div>
           </div>
         </div>
       </div>
     </div>
 
+    <!-- module -->
     <div
       class="fixed md:left-[calc(50%_-_224px)] max-md:items-end max-md:left-0 max-md:right-0 top-0 bottom-0 flex justify-center items-center z-50 invisible opacity-0"
       id="confirme-box"
@@ -94,6 +95,7 @@
       </div>
     </div>
 
+    <!-- overlay -->
     <div class="overlay w-full fixed top-0 bottom-0 bg-black/50 z-40 invisible opacity-0"></div>
   </body>
 </html>
