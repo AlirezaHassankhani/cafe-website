@@ -137,7 +137,7 @@ function getAddCartBtnTemplate() {
     `;
 }
 
-function getEnableBtnTemplate() {
+function getEnableBtnTemplate(counter: number) {
   return `
         <div class="flex justify-between items-center gap-2 bg-red p-4 rounded-4xl">
           <button class="border-2 border-rose-50 rounded-full size-5 flex justify-center items-center cursor-pointer" id="decrease-cart-btn">
@@ -152,7 +152,7 @@ function getEnableBtnTemplate() {
               </svg>
             </button>
 
-            <p class="text-sm font-redhatSemibold text-rose-50" id="counter">${counter.getCount()}</p>
+            <p class="text-sm font-redhatSemibold text-rose-50" id="counter">${counter}</p>
 
             <button class="border-2 border-rose-50 rounded-full size-5 flex justify-center items-center cursor-pointer" id="increase-cart-btn">
               <svg
@@ -183,16 +183,28 @@ function addCartBtn(target: HTMLElement) {
   const increaseBtn = target.closest("#increase-cart-btn");
   const decreaseBtn = target.closest("#decrease-cart-btn");
 
+  const ID: string = productBox.dataset.id || "";
+
+  const counter = new Counter(cart.getProductCount(ID) || 0);
+
   if (addCartBtn) {
     disableAllProduct();
     productBox.dataset.isSelected = "true";
-    cart.addToCart(productBox.dataset.id || "");
+    cart.addToCart(ID);
     addCartBtn.remove();
-    addCartWrapper?.insertAdjacentHTML("beforeend", getEnableBtnTemplate());
+    counter.increase();
+    addCartWrapper?.insertAdjacentHTML(
+      "beforeend",
+      getEnableBtnTemplate(counter.getCount())
+    );
   } else if (increaseBtn) {
-    cart.addToCart(productBox.dataset.id || "");
+    cart.addToCart(ID);
+    counter.increase();
+    addCartWrapper!.querySelector("#counter")!.textContent = String(counter.getCount());
   } else if (decreaseBtn) {
-    cart.deleteProduct(productBox.dataset.id || "");
+    cart.deleteProduct(ID);
+    counter.decrease();
+    addCartWrapper!.querySelector("#counter")!.textContent = String(counter.getCount());
   }
 
   setCartValue();
