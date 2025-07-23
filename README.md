@@ -24,7 +24,10 @@ To run locally:
 ```bash
 git clone https://github.com/AlirezaHassankhani/cafe-website
 cd your-project-name
-# Install dependencies if needed
-# Example:
-# npm install
-# npm run dev
+```
+Install dependencies if needed:
+```bash
+npm install
+npm run dev
+```
+and run it on local host and away we go.
