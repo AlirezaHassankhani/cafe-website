@@ -7,6 +7,8 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "tailwind": "npx @tailwindcss/cli -i ./src/styles/main.css -o ./dist/styles/style.css --watch"
+    "tailwind": "npx @tailwindcss/cli -i ./src/styles/main.css -o ./dist/styles/style.css --watch",
+    "typescript": "tsc --watch",
+    "dev": "npm run tailwind && npm run typescript"
   }
 }
