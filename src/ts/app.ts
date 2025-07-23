@@ -15,7 +15,6 @@ let cartTotalPrice = $.querySelector("#cart-total-price");
 let cartNewBtn = $.querySelector("#cart-new-btn");
 
 let cart = new Cart();
-let counter = new Counter(1);
 
 // Global event for event delegation
 function globalEvent(
@@ -175,6 +174,7 @@ function getEnableBtnTemplate(counter: number) {
 // event delegation
 globalEvent("#add-cart-wrapper", productsWrapper, "click", addCartBtn, true);
 globalEvent("#confirme-btn", cartWrapper, "click", confirmeModule);
+globalEvent("#delete-product", cartWrapper, "click", deleteProduct);
 
 function addCartBtn(target: HTMLElement) {
   const productBox = target.closest(".product-box") as HTMLDivElement;
@@ -269,6 +269,15 @@ function confirmeModule() {
 
   cart.setCart([]);
   setCartValue();
+}
+
+function deleteProduct(e: HTMLElement) {
+  const product = e.closest("[data-id]");
+
+  if(product instanceof HTMLLIElement) {
+    cart.deleteFormCart(product.dataset.id || "");
+    setCartValue();
+  }
 }
 
 // set is selected false data attribute
