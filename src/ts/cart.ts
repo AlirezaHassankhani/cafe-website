@@ -12,7 +12,7 @@ export interface ICartProduct {
 class Cart {
   private cart: ICartProduct[] = [];
 
-  addProductToCart(ID: string) {
+  addToCart(ID: string) {
     let hasProduct: boolean = this.cart.some((itme) => itme.id === ID);
 
     if (hasProduct) {

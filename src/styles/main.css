@@ -34,11 +34,3 @@
   --font-redhatBold: "RedHatTextBold";
   --font-redhatSemibold: "RedHatTextSemiBold";
 }
-
-[data-is-selected="false"] {
-  @apply justify-center items-center bg-white border-2 border-rose-300 cursor-pointer;
-}
-
-[data-is-selected="true"] {
-  @apply justify-between items-center gap-2 bg-red p-4;
-}

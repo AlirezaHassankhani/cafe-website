@@ -17,24 +17,26 @@ let cartNewBtn = $.querySelector("#cart-new-btn");
 let cart = new Cart();
 let counter = new Counter(1);
 
-
+// Global event for event delegation
 function globalEvent(
   selector: string,
-  parent: Element | Document = document,
+  parent: Element | Document | null,
   type: string,
-  callback: Function
+  callback: (target: HTMLElement) => void,
+  stopPropagation: boolean = false
 ) {
-  parent.addEventListener(type, function (e) {
+  parent?.addEventListener(type, function (e) {
     let target = e.target as HTMLElement;
     let isTarget = target.closest(selector);
 
     if (isTarget) {
-      callback();
+      if (stopPropagation) e.stopPropagation();
+      callback(target);
     }
   });
 }
 
-// overlay logic
+// Overlay logic
 function overlayOpen() {
   if (overlay instanceof HTMLDivElement) {
     overlay.dataset.isActive = "true";
@@ -42,7 +44,7 @@ function overlayOpen() {
 }
 
 function overlayClose() {
-  if(overlay instanceof HTMLDivElement) {
+  if (overlay instanceof HTMLDivElement) {
     overlay.dataset.isActive = "false";
   }
 
@@ -54,32 +56,40 @@ function overlayClose() {
 
 overlay?.addEventListener("click", overlayClose);
 
-
-// load cart
+// Load cart
 document.addEventListener("DOMContentLoaded", function () {
   setCartValue();
 });
 
+// Template product
+const fragment = $.createDocumentFragment();
 
-// template product
 products?.forEach((product) => {
-  const { id, name, price, src: {desktop, tablet, mobile}, title } = product;
+  const {
+    id,
+    name,
+    price,
+    src: { desktop, tablet, mobile },
+    title,
+  } = product;
 
-  productsWrapper?.insertAdjacentHTML(
+  const divElement = $.createElement("div");
+
+  divElement.insertAdjacentHTML(
     "beforeend",
     `
-        <div data-id=${id}>
+        <div data-id=${id} data-is-selected="false" class="product-box group">
               <div>
                 <div>
                     <picture>
                       <source media="(min-width: 1024px)" srcset=${desktop}>
                       <source media="(min-width: 768px)" srcset=${tablet}>
-                      <img src=${mobile} alt="product image" class="rounded-md object-cover w-full h-full border-red">
+                      <img src=${mobile} alt="product image" class="rounded-md object-cover w-full h-full border-red group-data-[is-selected=true]:border-2">
                     </picture>
                 </div>
 
-                <div class="relative z-10 flex -mt-6 h-12 w-44 mx-auto rounded-4xl" data-is-selected="false">
-                   ${getDisableBtnTemplate()}
+                <div id="add-cart-wrapper" class="relative z-10 -mt-6 h-12 w-44 mx-auto">
+                   ${getAddCartBtnTemplate()}
                 </div>
               </div>
 
@@ -91,11 +101,15 @@ products?.forEach((product) => {
             </div>
     `
   );
+
+  fragment?.append(divElement);
 });
 
-function getDisableBtnTemplate() {
+productsWrapper?.append(fragment);
+
+function getAddCartBtnTemplate() {
   return `
-                <div class="flex gap-2 w-full h-full items-center px-7" id="disable-btn">
+                <div class="flex justify-center items-center gap-2 bg-white border-2 border-rose-300 rounded-4xl w-full h-full px-7 cursor-pointer" id="add-cart-btn">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="21"
@@ -125,54 +139,66 @@ function getDisableBtnTemplate() {
 
 function getEnableBtnTemplate() {
   return `
-                <button class="border-2 border-rose-50 rounded-full size-5 flex justify-center items-center cursor-pointer" id="decrease-btn">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="2"
-                      fill="none"
-                      viewBox="0 0 10 2"
-                    >
-                      <path fill="#fff" d="M0 .375h10v1.25H0V.375Z" />
-                    </svg>
-                  </button>
+        <div class="flex justify-between items-center gap-2 bg-red p-4 rounded-4xl">
+          <button class="border-2 border-rose-50 rounded-full size-5 flex justify-center items-center cursor-pointer" id="decrease-cart-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="10"
+                height="2"
+                fill="none"
+                viewBox="0 0 10 2"
+              >
+                <path fill="#fff" d="M0 .375h10v1.25H0V.375Z" />
+              </svg>
+            </button>
 
-                  <p class="text-sm font-redhatSemibold text-rose-50" id="counter">${counter.getCount()}</p>
+            <p class="text-sm font-redhatSemibold text-rose-50" id="counter">${counter.getCount()}</p>
 
-                  <button class="border-2 border-rose-50 rounded-full size-5 flex justify-center items-center cursor-pointer" id="increase-btn">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="10"
-                      height="10"
-                      fill="none"
-                      viewBox="0 0 10 10"
-                    >
-                      <path
-                        fill="#fff"
-                        d="M10 4.375H5.625V0h-1.25v4.375H0v1.25h4.375V10h1.25V5.625H10v-1.25Z"
-                      />
-                    </svg>
-                  </button>
+            <button class="border-2 border-rose-50 rounded-full size-5 flex justify-center items-center cursor-pointer" id="increase-cart-btn">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="10"
+                height="10"
+                fill="none"
+                viewBox="0 0 10 10"
+              >
+                <path
+                  fill="#fff"
+                  d="M10 4.375H5.625V0h-1.25v4.375H0v1.25h4.375V10h1.25V5.625H10v-1.25Z"
+                />
+              </svg>
+            </button>
+          </div>
         `;
 }
 
+// event delegation
+globalEvent("#add-cart-wrapper", productsWrapper, "click", addCartBtn, true);
+globalEvent("#confirme-btn", cartWrapper, "click", confirmeModule);
 
-function disableAllBtn() {
-  const btnWrapper: HTMLDivElement = $.querySelector(
-    '[data-is-selected="true"]'
-  ) as HTMLDivElement;
+function addCartBtn(target: HTMLElement) {
+  const productBox = target.closest(".product-box") as HTMLDivElement;
+  const addCartWrapper = target.closest("#add-cart-wrapper");
+  const addCartBtn = target.closest("#add-cart-btn");
+  const increaseBtn = target.closest("#increase-cart-btn");
+  const decreaseBtn = target.closest("#decrease-cart-btn");
 
-  if (btnWrapper) {
-    btnWrapper.dataset.isSelected = "false";
-    btnWrapper.innerHTML = getDisableBtnTemplate();
-
-    btnWrapper.parentElement
-      ?.querySelector("img")
-      ?.classList.remove("border-2");
+  if (addCartBtn) {
+    disableAllProduct();
+    productBox.dataset.isSelected = "true";
+    cart.addToCart(productBox.dataset.id || "");
+    addCartBtn.remove();
+    addCartWrapper?.insertAdjacentHTML("beforeend", getEnableBtnTemplate());
+  } else if (increaseBtn) {
+    cart.addToCart(productBox.dataset.id || "");
+  } else if (decreaseBtn) {
+    cart.deleteProduct(productBox.dataset.id || "");
   }
+
+  setCartValue();
 }
 
-function confirmeBoxPopup() {
+function confirmeModule() {
   overlayOpen();
 
   let moduleCart = $.querySelector(".module-cart");
@@ -233,52 +259,27 @@ function confirmeBoxPopup() {
   setCartValue();
 }
 
-document.addEventListener("click", function (e) {
-  const target = e.target;
+// set is selected false data attribute
+function disableAllProduct() {
+  const activeProduct = productsWrapper?.querySelector(
+    "[data-is-selected=true]"
+  );
 
-  if (target instanceof Element) {
-    const btnWrapper = target.closest("[data-is-selected]") as HTMLDivElement;
-    const product = target.closest("[data-id]") as HTMLDivElement;
-    const disableBtn = target.closest("#disable-btn") as HTMLDivElement;
-
-    const increaseBtn = target.closest("#increase-btn") as HTMLDivElement;
-    const decreaseBtn = target.closest("#decrease-btn") as HTMLDivElement;
-
-    const deleteProductBtn = target.closest("#delete-product");
-
-    if (btnWrapper) {
-      if (disableBtn) {
-        disableAllBtn();
-        cart.addProductToCart(product.dataset.id || "");
-        counter.setCount(cart.getProductCount(product.dataset.id || "") || 0);
-
-        btnWrapper.dataset.isSelected = "true";
-        btnWrapper.parentElement
-          ?.querySelector("img")
-          ?.classList.add("border-2");
-      } else if (increaseBtn) {
-        cart.addProductToCart(product.dataset.id || "");
-        counter.increase();
-      } else if (decreaseBtn) {
-        cart.deleteProduct(product.dataset.id || "");
-        counter.decrease();
-      }
-
-      setCartValue();
-      btnWrapper.innerHTML = getEnableBtnTemplate();
-    } else if (deleteProductBtn) {
-      let item = deleteProductBtn.closest("[data-id]") as HTMLElement;
-      cart.deleteFormCart(item.dataset.id || "");
-      setCartValue();
-      disableAllBtn();
-    } else {
-      disableAllBtn();
-    }
+  if (activeProduct instanceof HTMLDivElement) {
+    activeProduct.dataset.isSelected = "false";
+    const addCartWrapper = activeProduct.querySelector(
+      "#add-cart-wrapper"
+    ) as HTMLDivElement;
+    addCartWrapper.innerHTML = "";
+    addCartWrapper.insertAdjacentHTML("beforeend", getAddCartBtnTemplate());
   }
-});
+}
 
+document.addEventListener("click", disableAllProduct);
+
+// Change cart content
 function setCartValue() {
-  if(cartCount instanceof HTMLSpanElement) {
+  if (cartCount instanceof HTMLSpanElement) {
     cartCount.textContent = String(cart.totalProduct());
   }
 
@@ -398,9 +399,4 @@ function setCartValue() {
   }
 }
 
-if(cartWrapper) globalEvent("#confirme-btn", cartWrapper, "click", confirmeBoxPopup);
-
-
-cartNewBtn?.addEventListener("click", () => {
-  overlayClose();
-});
+cartNewBtn?.addEventListener("click", overlayClose);
