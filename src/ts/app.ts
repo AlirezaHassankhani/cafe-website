@@ -5,10 +5,10 @@ import products from "./products.js";
 
 const $ = document;
 
+let overlay = $.querySelector(".overlay");
 let productsWrapper = $.querySelector(".products-wrapper");
 let cartWrapper = $.querySelector(".cart-wrapper");
 let cartCount = $.getElementById("cart-count");
-let overlay = $.querySelector(".overlay");
 
 let cartConfirmeWrapper = $.querySelector("#cart-confirme-wrapper");
 let cartTotalPrice = $.querySelector("#cart-total-price");
@@ -16,6 +16,35 @@ let cartNewBtn = $.querySelector("#cart-new-btn");
 
 let cart = new Cart();
 let counter = new Counter(1);
+
+
+function overlayOpen() {
+  if (overlay instanceof HTMLDivElement) {
+    overlay.dataset.isActive = "true";
+  }
+}
+
+function overlayClose() {
+  if(overlay instanceof HTMLDivElement) {
+    overlay.dataset.isActive = "false";
+  }
+
+  let opanElement = $.querySelector("[data-is-open=true]");
+  if (opanElement instanceof HTMLElement) {
+    opanElement.dataset.isOpen = "false";
+  }
+}
+
+function globalEvent(selector: string, parent: Element | Document = document, type: string, callback: Function) {
+  parent.addEventListener(type, function(e) {
+    let target = e.target as HTMLElement;
+    let isTarget = target.closest(selector);
+
+    if(isTarget) {
+      callback();
+    }
+  })
+}
 
 document.addEventListener("DOMContentLoaded", function () {
   setCartValue();
@@ -130,27 +159,12 @@ function disableAllBtn() {
   }
 }
 
-function overlayClose() {
-  overlay?.classList.add(...["invisible", "opacity-0"]);
-
-  let opanElement = $.querySelector("[data-open='true']") as HTMLElement;
-  if (opanElement) {
-    opanElement.dataset.open = "false";
-    opanElement.classList.add(...["invisible", "opacity-0"]);
-  }
-}
-
-function overlayOpen() {
-  overlay?.classList.remove(...["invisible", "opacity-0"]);
-}
-
 function confirmeBoxPopup() {
   overlayOpen();
 
-  let confirmeBox = $.querySelector("#confirme-box") as HTMLElement;
-  if (confirmeBox) {
-    confirmeBox.dataset.open = "true";
-    confirmeBox.classList.remove(...["invisible", "opacity-0"]);
+  let moduleCart = $.querySelector(".module-cart");
+  if (moduleCart instanceof HTMLDivElement) {
+    moduleCart.dataset.isOpen = "true";
   }
 
   if (cartConfirmeWrapper) cartConfirmeWrapper.textContent = "";
@@ -373,17 +387,8 @@ function setCartValue() {
   }
 }
 
-cartWrapper?.addEventListener("click", function (e) {
-  let target = e.target;
+if(cartWrapper) globalEvent("#confirme-btn", cartWrapper, "click", confirmeBoxPopup);
 
-  if (target instanceof Element) {
-    let confirmeBtn = target.closest("#confirme-btn");
-
-    if (confirmeBtn) {
-      confirmeBoxPopup();
-    }
-  }
-});
 
 cartNewBtn?.addEventListener("click", () => {
   overlayClose();

@@ -39,9 +39,8 @@
 
     <!-- module -->
     <div
-      class="fixed md:left-[calc(50%_-_224px)] max-md:items-end max-md:left-0 max-md:right-0 top-0 bottom-0 flex justify-center items-center z-50 invisible opacity-0"
-      id="confirme-box"
-      data-open="false"
+      class="module-cart fixed md:left-1/2 md:top-1/2 md:-translate-1/2 max-md:items-end max-md:left-0 max-md:right-0 top-0 bottom-0 flex justify-center items-center z-50 data-[is-open=false]:hidden"
+      data-is-open="false"
     >
       <div class="md:w-md w-full bg-white rounded-md p-5">
         <div class="flex flex-col gap-5">
@@ -96,6 +95,6 @@
     </div>
 
     <!-- overlay -->
-    <div class="overlay w-full fixed top-0 bottom-0 bg-black/50 z-40 invisible opacity-0"></div>
+    <div data-is-active="false" class="overlay w-full fixed top-0 bottom-0 bg-black/50 z-40 data-[is-active=false]:hidden"></div>
   </body>
 </html>
