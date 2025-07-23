@@ -18,6 +18,23 @@ let cart = new Cart();
 let counter = new Counter(1);
 
 
+function globalEvent(
+  selector: string,
+  parent: Element | Document = document,
+  type: string,
+  callback: Function
+) {
+  parent.addEventListener(type, function (e) {
+    let target = e.target as HTMLElement;
+    let isTarget = target.closest(selector);
+
+    if (isTarget) {
+      callback();
+    }
+  });
+}
+
+// overlay logic
 function overlayOpen() {
   if (overlay instanceof HTMLDivElement) {
     overlay.dataset.isActive = "true";
@@ -35,19 +52,45 @@ function overlayClose() {
   }
 }
 
-function globalEvent(selector: string, parent: Element | Document = document, type: string, callback: Function) {
-  parent.addEventListener(type, function(e) {
-    let target = e.target as HTMLElement;
-    let isTarget = target.closest(selector);
+overlay?.addEventListener("click", overlayClose);
 
-    if(isTarget) {
-      callback();
-    }
-  })
-}
 
+// load cart
 document.addEventListener("DOMContentLoaded", function () {
   setCartValue();
+});
+
+
+// template product
+products?.forEach((product) => {
+  const { id, name, price, src: {desktop, tablet, mobile}, title } = product;
+
+  productsWrapper?.insertAdjacentHTML(
+    "beforeend",
+    `
+        <div data-id=${id}>
+              <div>
+                <div>
+                    <picture>
+                      <source media="(min-width: 1024px)" srcset=${desktop}>
+                      <source media="(min-width: 768px)" srcset=${tablet}>
+                      <img src=${mobile} alt="product image" class="rounded-md object-cover w-full h-full border-red">
+                    </picture>
+                </div>
+
+                <div class="relative z-10 flex -mt-6 h-12 w-44 mx-auto rounded-4xl" data-is-selected="false">
+                   ${getDisableBtnTemplate()}
+                </div>
+              </div>
+
+              <div class="my-4 space-y-1">
+                <p class="font-redhat text-rose-300 text-sm">${name}</p>
+                <p class="font-redhatSemibold">${title}</p>
+                <p class="font-redhatSemibold text-red">$${price}</p>
+              </div>
+            </div>
+    `
+  );
 });
 
 function getDisableBtnTemplate() {
@@ -113,36 +156,6 @@ function getEnableBtnTemplate() {
         `;
 }
 
-products.forEach((product) => {
-  const { id, name, price, src, title } = product;
-
-  productsWrapper?.insertAdjacentHTML(
-    "beforeend",
-    `
-        <div data-id=${id}>
-              <div>
-                <div>
-                    <img
-                        src=${src.desktop}
-                        alt=${name}
-                        class="rounded-md object-cover w-full h-full border-red"
-                    />
-                </div>
-
-                <div class="relative z-10 flex -mt-6 h-12 w-44 mx-auto rounded-4xl" data-is-selected="false">
-                   ${getDisableBtnTemplate()}
-                </div>
-              </div>
-
-              <div class="my-4 space-y-1">
-                <p class="font-redhat text-rose-300 text-sm">${name}</p>
-                <p class="font-redhatSemibold">${title}</p>
-                <p class="font-redhatSemibold text-red">$${price}</p>
-              </div>
-            </div>
-    `
-  );
-});
 
 function disableAllBtn() {
   const btnWrapper: HTMLDivElement = $.querySelector(
@@ -219,8 +232,6 @@ function confirmeBoxPopup() {
   cart.setCart([]);
   setCartValue();
 }
-
-overlay?.addEventListener("click", overlayClose);
 
 document.addEventListener("click", function (e) {
   const target = e.target;
