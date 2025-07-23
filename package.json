@@ -7,6 +7,6 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "tailwind": "npx @tailwindcss/cli -i ./src/styles/input.css -o ./dist/styles/main.css --watch"
+    "tailwind": "npx @tailwindcss/cli -i ./src/styles/main.css -o ./dist/styles/style.css --watch"
   }
 }
