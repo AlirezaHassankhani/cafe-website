@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+@font-face {
+    font-family: "RedHatText";
+    src: url(../../assets/fonts/static/RedHatText-Regular.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "RedHatTextBold";
+    src: url(../../assets/fonts/static/RedHatText-Bold.ttf) format("truetype");
+}
+
+@font-face {
+    font-family: "RedHatTextSemiBold";
+    src: url(../../assets/fonts/static/RedHatText-SemiBold.ttf) format("truetype");
+}
+
+@utility container {
+  margin-inline: auto;
+  padding-inline: 2rem;
+}
+
+@theme {
+  --color-red: hsl(14, 86%, 42%);
+  --color-green: hsl(159, 69%, 38%);
+  --color-rose-50: hsl(20, 50%, 98%);
+  --color-rose-100: hsl(13, 31%, 94%);
+  --color-rose-300: hsl(14, 25%, 72%);
+  --color-rose-400: hsl(7, 20%, 60%);
+  --color-rose-500: hsl(12, 20%, 44%);
+  --color-rose-900: hsl(14, 65%, 9%);
+
+  --font-redhat: "RedHatText";
+  --font-redhatBold: "RedHatTextBold";
+  --font-redhatSemibold: "RedHatTextSemiBold";
+}
+
+[data-is-selected="false"] {
+  @apply justify-center items-center bg-white border-2 border-rose-300 cursor-pointer;
+}
+
+[data-is-selected="true"] {
+  @apply justify-between items-center gap-2 bg-red p-4;
+}
